@@ -7,11 +7,11 @@ import com.kotagiri.employeeservice.entity.Employee;
 import com.kotagiri.employeeservice.pojo.AddressDTO;
 import com.kotagiri.employeeservice.pojo.EmployeeDTO;
 import com.kotagiri.employeeservice.service.EmployeeService;
+import com.kotagiri.employeeservice.utility.EmployeeServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,50 +42,32 @@ public class EmployeeServiceImpl implements EmployeeService {
         address.setRegion(addressDTO.getRegion());
         address.setZipCode(addressDTO.getZipCode());
         employee.setAddress(address);
+
+        EmployeeServiceUtil.populateExperiencesFromDTOToEntity(employee,employeeDTO);
+        EmployeeServiceUtil.populateCompanyFromDTOToEntity(employee,employeeDTO);
         employeeRepository.save(employee);
 
     }
+
 
     @Override
     public EmployeeDTO getEmployeeById(String id) {
         EmployeeDTO employeeDTO=new EmployeeDTO();
         Optional<Employee> employee=employeeRepository.findById(id);
-        populateEmployeeDTO(employeeDTO, employee);
+        EmployeeServiceUtil.populateEmployeeDTO(employeeDTO, employee);
         return employeeDTO;
     }
 
-    private static void populateEmployeeDTO(EmployeeDTO employeeDTO, Optional<Employee> employee) {
-        if(employee.isPresent())
-        {
-            Employee employeeRecord= employee.get();
 
-            employeeDTO.setId(employeeRecord.getId());
-            employeeDTO.setFirstName(employeeRecord.getFirstName());
-            employeeDTO.setLastName(employeeRecord.getLastName());
-            employeeDTO.setGender(employeeRecord.getGender());
-            employeeDTO.setDateOfBirth(employeeRecord.getDateOfBirth());
-            employeeDTO.setDepartment(employeeRecord.getDepartment());
-            employeeDTO.setSalary(employeeRecord.getSalary());
-            Address address=employeeRecord.getAddress();
 
-            AddressDTO addressDTO=new AddressDTO();
-            addressDTO.setStreetName(address.getStreetName());
-            addressDTO.setStreetNo(address.getStreetNo());
-            addressDTO.setHouseNo(address.getHouseNo());
-            addressDTO.setState(address.getState());
-            addressDTO.setCountry(address.getCountry());
-            addressDTO.setRegion(address.getRegion());
-            addressDTO.setZipCode(address.getZipCode());
-            employeeDTO.setAddress(addressDTO);
-        }
-    }
+
 
     @Override
     public EmployeeDTO getEmployeeByFirstName(String firstName) {
 
         EmployeeDTO employeeDTO=new EmployeeDTO();
         Optional<Employee> employee=employeeRepository.findByFirstName(firstName);
-        populateEmployeeDTO(employeeDTO, employee);
+        EmployeeServiceUtil.populateEmployeeDTO(employeeDTO, employee);
         return employeeDTO;
     }
 
@@ -93,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDTO getEmployeeByFirstNameAndLastName(String firstName, String lastName) {
         EmployeeDTO employeeDTO=new EmployeeDTO();
         Optional<Employee> employee=employeeRepository.findByFirstNameAndLastName(firstName,lastName);
-        populateEmployeeDTO(employeeDTO, employee);
+        EmployeeServiceUtil.populateEmployeeDTO(employeeDTO, employee);
         return employeeDTO;
     }
 
@@ -103,7 +85,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Iterable<Employee> employees=employeeRepository.findAll();
         employees.forEach(employee -> {
             EmployeeDTO employeeDTO=new EmployeeDTO();
-            populateEmployeeDTO(employeeDTO, Optional.of(employee));
+            EmployeeServiceUtil.populateEmployeeDTO(employeeDTO, Optional.of(employee));
             employeeDTOList.add(employeeDTO);
         });
         return employeeDTOList;
@@ -115,7 +97,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<List<Employee>> employees=employeeRepository.findByAddressStreetName(streetName);
         employees.get().forEach(employee -> {
             EmployeeDTO employeeDTO=new EmployeeDTO();
-            populateEmployeeDTO(employeeDTO, Optional.of(employee));
+            EmployeeServiceUtil.populateEmployeeDTO(employeeDTO, Optional.of(employee));
             employeeDTOList.add(employeeDTO);
         });
         return employeeDTOList;
@@ -127,7 +109,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<List<Employee>> employees=employeeRepository.findByAddressCountry(country);
         employees.get().forEach(employee -> {
             EmployeeDTO employeeDTO=new EmployeeDTO();
-            populateEmployeeDTO(employeeDTO, Optional.of(employee));
+            EmployeeServiceUtil.populateEmployeeDTO(employeeDTO, Optional.of(employee));
             employeeDTOList.add(employeeDTO);
         });
         return employeeDTOList;
@@ -139,7 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> employees=employeeRepository.getEmployeeByGenderAndDepartment(gender,department);
         employees.forEach(employee -> {
             EmployeeDTO employeeDTO=new EmployeeDTO();
-            populateEmployeeDTO(employeeDTO, Optional.of(employee));
+            EmployeeServiceUtil.populateEmployeeDTO(employeeDTO, Optional.of(employee));
             employeeDTOList.add(employeeDTO);
         });
         return employeeDTOList;
