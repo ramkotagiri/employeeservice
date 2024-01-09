@@ -77,6 +77,7 @@ public class EmployeeController {
     @GetMapping("/getCompanyByName/{company}")
     public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable String company)
     {
+        //Returning Company By ID
         return new ResponseEntity<>(companyService.getCompanyById(company),HttpStatus.OK);
     }
 }
