@@ -1,15 +1,13 @@
 package com.kotagiri.employeeservice.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
 
 @Entity
 @Data
+@NamedNativeQuery(name="Experience.findByExperienceEmployeeId",query="select exp.* from experience exp join employee_experience eexp on eexp.experience_id=exp.id join employee e on e.id=eexp.employee_id where e.id=?1",resultClass = Experience.class)
 public class Experience {
     @GeneratedValue
     @Id

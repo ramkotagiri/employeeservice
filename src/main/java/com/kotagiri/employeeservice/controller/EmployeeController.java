@@ -1,10 +1,12 @@
 package com.kotagiri.employeeservice.controller;
 
 import com.kotagiri.employeeservice.entity.Address;
+import com.kotagiri.employeeservice.entity.Experience;
 import com.kotagiri.employeeservice.pojo.CompanyDTO;
 import com.kotagiri.employeeservice.pojo.EmployeeDTO;
 import com.kotagiri.employeeservice.service.CompanyService;
 import com.kotagiri.employeeservice.service.EmployeeService;
+import com.kotagiri.employeeservice.service.ExperienceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,10 @@ public class EmployeeController {
     private EmployeeService employeeService;
     @Autowired
     private CompanyService companyService;
+
+    @Autowired
+    private ExperienceService experienceService;
+
     @PostMapping("/employee")
     public ResponseEntity<String> insertEmployeeRecord(@RequestBody EmployeeDTO employeeDTO)
     {
@@ -78,5 +84,11 @@ public class EmployeeController {
     public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable String company)
     {
         return new ResponseEntity<>(companyService.getCompanyById(company),HttpStatus.OK);
+    }
+
+    @GetMapping("/getExperienceByEmployeeId/{id}")
+    public ResponseEntity<List<Experience>> getExperienceByEmployeeId(@PathVariable String id)
+    {
+        return new ResponseEntity<>(experienceService.getExperienceByEmployeeId(id),HttpStatus.OK);
     }
 }
